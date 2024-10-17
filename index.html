@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="shortcut icon" href="./images/clima-quente.png" />
+    <title>Clima Hoje</title>
+</head>
+
+<body class="bg-info gradient">
+
+    <div class="bg-light container-fluid col-sm-4 rounded-3 mt-1">
+
+        <div class=" input-group input-group-sm pt-3 pb-3">
+            <input class="form-control" type="text" id="idInputCidade" placeholder="Buscar uma cidade">
+            <button class="input-group-text" id="idBtnPesquisa" type="button"><img
+                    src="https://image.flaticon.com/icons/png/512/13/13267.png" width="16px" alt=""></button>
+        </div>
+
+        <div class="row text-center">
+            <div class="col ">
+                <span id="idtextEstadoAtual" class="m-3 display">
+                </span>
+                <h2 id="idTempHJText" class="h2"></h2>
+            </div>
+        </div>
+
+        <div class="row text-center">
+            <div class="col">
+                <span id="temptest">
+                    <img id="idfotoTempHJ" src="./images/dia-nublado.png" alt="sol sobre nuvens">
+                </span>
+                <span id="idTempHJtext" class="h1">30º
+                </span>
+
+                <p></p>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col">
+
+            </div>
+        </div>
+
+        <div class="align-content-center">
+            <div class="row">
+                <div class="col">
+                    <span>
+                        <img src="./images/wind.png" alt="" width="24px">
+                    </span>
+                    <span id="idTempHJtext" class="">Vento
+                    </span>
+                </div>
+
+                <div class="col">
+                    <p id="idVelVento">13 km/h</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <span>
+                        <img src="./images/umidade.png" alt="" width="24px">
+                    </span>
+                    <span>Umidade
+                    </span>
+                </div>
+
+                <div class="col">
+                    <p id="idTextUmidade">29%</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <span>Min
+                    </span>
+                </div>
+                <div class="col">
+                    <p id="idMinTemp"></p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <span>Max
+                    </span>
+                </div>
+                <div class="col">
+                    <p id="idMaxTemp"></p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <span>Temperatura media
+                    </span>
+                </div>
+                <div class="col">
+                    <p id="idTempMedia"></p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <span>Chuva
+                    </span>
+                </div>
+                <div class="col">
+                    <p id="idChuva"></p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <span>Umidade media
+                    </span>
+                </div>
+                <div class="col">
+                    <p id="idUmiMedia"></p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <span>Índice máximo de raios UV
+                    </span>
+                </div>
+                <div class="col">
+                    <p id="idUv"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <h1 id="idCidade">Salvador-Ba</h1>
+            <p id="idDia">quarta feira, 14:00</p>
+            <p id="idLat"></p>
+            <p id="idLon"></p>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <p>Amanhã</p>
+                <img id="idfotoTemp01" src="./images/dia-nublado.png" alt="sol sobre nuvens">
+            </div>
+
+            <div class="col">
+                <p>Depois de Amanhã</p>
+                <img id="idfotoTemp02" src="./images/dia-nublado.png" alt="sol sobre nuvens">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+        var btnBuscaCidade = document.getElementById("idBtnPesquisa")
+        atualizaApiNew("Salvador")
+
+        //buscar pelo icone de busca
+        btnBuscaCidade.addEventListener('click', function () {
+            cidade = document.getElementById("idInputCidade").value
+            atualizaApiNew(cidade)
+            document.getElementById("idInputCidade").value = ""
+        })
+
+        //Busca pelo Enter
+        document.addEventListener("keypress", function (e) {
+            if (e.key === 'Enter') {
+                cidade = document.getElementById("idInputCidade").value
+                atualizaApiNew(cidade)
+                document.getElementById("idInputCidade").value = ""
+
+            }
+        });
+
+        async function getClimaAwait(cidade) {
+            var response = await fetch("https://weatherapi-com.p.rapidapi.com/forecast.json?q=" + cidade +
+                "&days=10&lang=pt", {
+                    "method": "GET",
+                    "headers": {
+                        "x-rapidapi-host": "weatherapi-com.p.rapidapi.com",
+                        "x-rapidapi-key": "d2818df067mshf9b162c91bf4c37p1bb89bjsna0c0c27943c0"
+                    }
+                })
+            return response.json()
+        }
+
+        async function atualizaApiNew(cidade) {
+
+            console.log("Ultima Linha");
+            var response = await getClimaAwait(cidade)
+
+            console.log(response);
+            imgClimaHJ(response.current.condition.icon, 'idfotoTempHJ')
+            imgClimaHJ(response.forecast.forecastday[1].day.condition.icon, 'idfotoTemp01')
+            imgClimaHJ(response.forecast.forecastday[2].day.condition.icon, 'idfotoTemp02')
+
+            //atulizando textos
+            document.getElementById("idTempHJText").innerText = response.location.name
+            document.getElementById("idTempHJtext").innerText = response.current.temp_c + "ºc"
+            document.getElementById("idtextEstadoAtual").innerText = response.current.condition.text
+            document.getElementById("idVelVento").innerText = response.current.vis_km + "km/h"
+            document.getElementById("idTextUmidade").innerText = response.current.humidity + "%"
+            document.getElementById("idCidade").innerText = response.location.name + "-" + response.location.region
+            document.getElementById("idLat").innerText = "Latitude: " + response.location.lat
+            document.getElementById("idLon").innerText = "Longetude: " + response.location.lon
+            document.getElementById("idMinTemp").innerText = response.forecast.forecastday[0].day.mintemp_c + "ºC"
+            document.getElementById("idMaxTemp").innerText = response.forecast.forecastday[0].day.maxtemp_c + "ºC"
+            document.getElementById("idChuva").innerText = response.forecast.forecastday[0].day
+                .daily_chance_of_rain + "%"
+            document.getElementById("idTempMedia").innerText = response.forecast.forecastday[0].day.avgtemp_c + "ºC"
+            document.getElementById("idUmiMedia").innerText = response.forecast.forecastday[0].day.avghumidity + "%"
+            document.getElementById("idUv").innerText = response.forecast.forecastday[0].day.uv
+
+
+
+            console.log(response.forecast.forecastday[0].day.mintemp_c);
+        }
+
+        function imgClimaHJ(img, idImg) {
+            console.log(idImg);
+            document.getElementById(idImg).src = 'http:' + img
+        }
+    </script>
+
+    <!--Bootstrap-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous">
+    </script>
+
+</body>
+
+</html>
